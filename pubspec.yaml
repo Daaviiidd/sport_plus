@@ -1,0 +1,27 @@
+name: sport_plus
+description: Aplicación para el monitoreo del estado emocional de deportistas.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^0.63.0
+
+  # Material Design Icons, animations, etc.
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Puedes agregar assets aquí si luego añades audios, imágenes, etc.
+  # assets:
+  #   - assets/images/
+  #   - assets/audio/
