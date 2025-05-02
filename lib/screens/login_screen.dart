@@ -40,7 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.sports_soccer, size: 80, color: Colors.white),
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: const AssetImage('assets/images/logo.png'),
+              ),
               const SizedBox(height: 20),
               const Text(
                 'Sport Plus',
