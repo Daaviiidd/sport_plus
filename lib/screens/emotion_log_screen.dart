@@ -4,70 +4,112 @@ class EmotionLogScreen extends StatefulWidget {
   const EmotionLogScreen({super.key});
 
   @override
-  _EmotionLogScreenState createState() => _EmotionLogScreenState();
+  State<EmotionLogScreen> createState() => _EmotionLogScreenState();
 }
 
 class _EmotionLogScreenState extends State<EmotionLogScreen> {
-  final TextEditingController _emotionController = TextEditingController();
-  final List<String> _emotionEntries = [];
+  String? selectedEmotion;
+  final TextEditingController diaryController = TextEditingController();
 
-  void _addEmotion() {
+  final emotions = [
+    {'emoji': '😊', 'label': 'Feliz'},
+    {'emoji': '😔', 'label': 'Triste'},
+    {'emoji': '😡', 'label': 'Enojado'},
+    {'emoji': '😰', 'label': 'Ansioso'},
+    {'emoji': '😎', 'label': 'Motivado'},
+  ];
+
+  void _saveEntry() {
+    if (selectedEmotion == null || diaryController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Completa todos los campos')),
+      );
+      return;
+    }
+
+    // Simulación de guardado
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Entrada emocional guardada')),
+    );
+
     setState(() {
-      if (_emotionController.text.isNotEmpty) {
-        _emotionEntries.add(_emotionController.text);
-        _emotionController.clear();
-      }
+      selectedEmotion = null;
+      diaryController.clear();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
         title: const Text('Registro Emocional'),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
               '¿Cómo te sientes hoy?',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _emotionController,
-              decoration: const InputDecoration(
-                hintText: 'Escribe tu emoción...',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.save),
-              label: const Text('Guardar Emoción'),
-              onPressed: _addEmotion,
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: 15,
+              runSpacing: 15,
+              children: emotions.map((emotion) {
+                final isSelected = selectedEmotion == emotion['label'];
+                return GestureDetector(
+                  onTap: () => setState(() {
+                    selectedEmotion = emotion['label']!;
+                  }),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Colors.tealAccent[700]
+                          : Colors.blueGrey[700],
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Center(
+                      child: Text(
+                        emotion['emoji']!,
+                        style: const TextStyle(fontSize: 36),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 30),
-            const Text(
-              'Tu Diario Emocional',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            TextField(
+              controller: diaryController,
+              style: const TextStyle(color: Colors.white),
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: 'Escribe sobre tu día...',
+                hintStyle: const TextStyle(color: Colors.white54),
+                filled: true,
+                fillColor: Colors.blueGrey[700],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
             ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _emotionEntries.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.sentiment_satisfied_alt),
-                      title: Text(_emotionEntries[index]),
-                    ),
-                  );
-                },
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: _saveEntry,
+              icon: const Icon(Icons.save),
+              label: const Text('Guardar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.tealAccent[700],
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               ),
             ),
           ],

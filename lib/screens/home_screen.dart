@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'emotion_log_screen.dart';
 import 'relaxation_tools_screen.dart';
 import 'reports_screen.dart';
-import 'emotion_log_screen.dart';
+import 'performance_stats_screen.dart';
 import 'coach_panel_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,112 +10,104 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<_MenuOption> options = [
+      _MenuOption(
+        icon: Icons.mood,
+        label: 'Registro Emocional',
+        screen: const EmotionLogScreen(),
+      ),
+      _MenuOption(
+        icon: Icons.self_improvement,
+        label: 'Relajación',
+        screen: const RelaxationToolsScreen(),
+      ),
+      _MenuOption(
+        icon: Icons.article,
+        label: 'Reportes',
+        screen: const ReportsScreen(),
+      ),
+      _MenuOption(
+        icon: Icons.bar_chart,
+        label: 'Estadísticas',
+        screen: const PerformanceStatsScreen(),
+      ),
+      _MenuOption(
+        icon: Icons.supervisor_account,
+        label: 'Panel Entrenador',
+        screen: const CoachPanelScreen(),
+      ),
+    ];
+
     return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
-        title: const Text('Sport +'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('Bienvenido a Sport Plus'),
         centerTitle: true,
+        foregroundColor: Colors.white,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
+      body: GridView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: options.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
+        ),
+        itemBuilder: (context, index) {
+          final option = options[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => option.screen),
+              );
+            },
+            child: Container(
               decoration: BoxDecoration(
-                color: Colors.indigo,
+                color: Colors.tealAccent[700],
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(2, 4),
+                  )
+                ],
               ),
-              child: Text(
-                'Menú',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_note),
-              title: const Text('Registrar Estado Emocional'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const EmotionLogScreen()),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.self_improvement),
-              title: const Text('Técnicas de Relajación'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const RelaxationToolsScreen()),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text('Ver Reportes'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ReportsScreen()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(option.icon, size: 50, color: Colors.white),
+                  const SizedBox(height: 10),
+                  Text(
+                    option.label,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.group),
-              title: const Text('Panel de Entrenador'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CoachPanelScreen()),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Bienvenido, atleta 👋',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.edit_note),
-              label: const Text('Registrar Estado Emocional'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const EmotionLogScreen()),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.self_improvement),
-              label: const Text('Técnicas de Relajación'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const RelaxationToolsScreen()),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.bar_chart),
-              label: const Text('Ver Reportes'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ReportsScreen()),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.group),
-              label: const Text('Panel de Entrenador'),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const CoachPanelScreen()),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
+}
+
+class _MenuOption {
+  final IconData icon;
+  final String label;
+  final Widget screen;
+
+  _MenuOption({
+    required this.icon,
+    required this.label,
+    required this.screen,
+  });
 }

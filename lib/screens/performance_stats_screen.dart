@@ -3,59 +3,48 @@ import 'package:flutter/material.dart';
 class PerformanceStatsScreen extends StatelessWidget {
   const PerformanceStatsScreen({super.key});
 
+  final List<Map<String, dynamic>> stats = const [
+    {'label': 'Energía', 'value': 0.75, 'color': Colors.green},
+    {'label': 'Motivación', 'value': 0.9, 'color': Colors.teal},
+    {'label': 'Estrés', 'value': 0.3, 'color': Colors.orange},
+    {'label': 'Concentración', 'value': 0.85, 'color': Colors.blueAccent},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
-        title: const Text('Sport +'),
+        title: const Text('Estadísticas de Rendimiento'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.indigo),
-              child: Text(
-                'Menú',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_note),
-              title: const Text('Registrar Estado Emocional'),
-              onTap: () {
-                Navigator.pushNamed(context, '/emotion_log');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.self_improvement),
-              title: const Text('Técnicas de Relajación'),
-              onTap: () {
-                Navigator.pushNamed(context, '/relaxation');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text('Ver Reportes'),
-              onTap: () {
-                Navigator.pushNamed(context, '/reports');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.group),
-              title: const Text('Panel de Entrenador'),
-              onTap: () {
-                Navigator.pushNamed(context, '/coach');
-              },
-            ),
-          ],
-        ),
-      ),
-      body: const Center(
-        child: Text(
-          '📊 Estadísticas del rendimiento\n(próximamente)',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 24),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: stats.map((stat) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  stat['label'],
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: LinearProgressIndicator(
+                    value: stat['value'],
+                    minHeight: 20,
+                    backgroundColor: Colors.blueGrey[700],
+                    valueColor: AlwaysStoppedAnimation<Color>(stat['color']),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            );
+          }).toList(),
         ),
       ),
     );

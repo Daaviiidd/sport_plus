@@ -1,75 +1,63 @@
 import 'package:flutter/material.dart';
 
-class ReportsScreen extends StatefulWidget {
+class ReportsScreen extends StatelessWidget {
   const ReportsScreen({super.key});
 
-  @override
-  State<ReportsScreen> createState() => _ReportsScreenState();
-}
-
-class _ReportsScreenState extends State<ReportsScreen> {
-  final List<String> reports = [
-    'Reporte 1: Sentimiento de estrés.',
-    'Reporte 2: Sentimiento de motivación.'
+  // Simulación de reportes emocionales (podría venir de base de datos)
+  final List<Map<String, String>> reports = const [
+    {
+      'date': '01/05/2025',
+      'emotion': '😊 Feliz',
+      'note': 'Hoy me sentí motivado después del entrenamiento.'
+    },
+    {
+      'date': '30/04/2025',
+      'emotion': '😔 Triste',
+      'note': 'Perdimos el partido, me sentí un poco desanimado.'
+    },
+    {
+      'date': '29/04/2025',
+      'emotion': '😎 Motivado',
+      'note': 'Logré superar mi marca personal en velocidad.'
+    },
   ];
-  final TextEditingController _controller = TextEditingController();
-
-  void _addReport() {
-    final newReport = _controller.text.trim();
-    if (newReport.isNotEmpty) {
-      setState(() {
-        reports.add(newReport);
-        _controller.clear();
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
-        title: const Text('Ver Reportes'),
-        centerTitle: true,
+        title: const Text('Reportes de Estado'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Reportes de Estado',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: reports.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.assignment),
-                      title: Text(reports[index]),
-                    ),
-                  );
-                },
+      body: ListView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: reports.length,
+        itemBuilder: (context, index) {
+          final report = reports[index];
+          return Card(
+            color: Colors.blueGrey[700],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+              leading: Text(
+                report['emotion']!,
+                style: const TextStyle(fontSize: 26),
+              ),
+              title: Text(
+                report['note']!,
+                style: const TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                report['date']!,
+                style: const TextStyle(color: Colors.white60),
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: 'Nuevo reporte de estado',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: _addReport,
-              icon: const Icon(Icons.add_box),
-              label: const Text('Añadir Reporte'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

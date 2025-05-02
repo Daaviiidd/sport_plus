@@ -8,65 +8,90 @@ class CoachPanelScreen extends StatefulWidget {
 }
 
 class _CoachPanelScreenState extends State<CoachPanelScreen> {
-  final List<String> athletes = ['Juan Pérez', 'Laura Gómez', 'Carlos Ruiz'];
-  final TextEditingController _controller = TextEditingController();
+  final List<String> athletes = ['Carlos Pérez', 'Lucía Gómez', 'David Ruiz'];
+
+  final TextEditingController _newAthleteController = TextEditingController();
 
   void _addAthlete() {
-    final newAthlete = _controller.text.trim();
-    if (newAthlete.isNotEmpty) {
-      setState(() {
-        athletes.add(newAthlete);
-        _controller.clear();
-      });
-    }
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.blueGrey[800],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title:
+            const Text('Nuevo Atleta', style: TextStyle(color: Colors.white)),
+        content: TextField(
+          controller: _newAthleteController,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Nombre del atleta',
+            hintStyle: const TextStyle(color: Colors.white60),
+            filled: true,
+            fillColor: Colors.blueGrey[700],
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _newAthleteController.clear();
+            },
+            child: const Text('Cancelar',
+                style: TextStyle(color: Colors.redAccent)),
+          ),
+          TextButton(
+            onPressed: () {
+              final name = _newAthleteController.text.trim();
+              if (name.isNotEmpty) {
+                setState(() => athletes.add(name));
+                Navigator.pop(context);
+                _newAthleteController.clear();
+              }
+            },
+            child: const Text('Añadir',
+                style: TextStyle(color: Colors.tealAccent)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
-        title: const Text('Panel de Entrenador'),
-        centerTitle: true,
+        title: const Text('Panel del Entrenador'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_add, color: Colors.tealAccent),
+            onPressed: _addAthlete,
+          )
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Lista de Atletas',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: athletes.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: Text(athletes[index]),
-                    ),
-                  );
-                },
+      body: ListView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: athletes.length,
+        itemBuilder: (context, index) {
+          return Card(
+            color: Colors.tealAccent[700],
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+              leading: const Icon(Icons.person, color: Colors.white),
+              title: Text(
+                athletes[index],
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: 'Nombre del nuevo atleta',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: _addAthlete,
-              icon: const Icon(Icons.person_add),
-              label: const Text('Añadir Atleta'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
